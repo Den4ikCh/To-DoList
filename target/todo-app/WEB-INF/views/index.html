@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link th:href="@{/styles/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1><i class="fas fa-tasks"></i> Мой To-Do List</h1>
+        <p>Организуйте свои задачи эффективно</p>
+    </header>
+
+    <div class="task-form">
+        <h2>Добавить новую задачу</h2>
+        <a th:href="@{/task/new}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Добавить задачу
+        </a>
+    </div>
+
+    <div class="tasks-section">
+        <h2>Мои задачи</h2>
+
+        <div th:if="${#lists.isEmpty(tasks)}" class="loading">
+            <i class="fas fa-clipboard-list fa-3x" style="color: #6c757d; margin-bottom: 10px;"></i>
+            <p>Задачи не найдены</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(tasks)}" class="tasks-list">
+            <div th:each="task : ${tasks}" class="task-item" th:classappend="${task.completed} ? 'completed' : ''">
+                <div class="task-content">
+                    <div class="task-title" th:text="${task.name}">Название задачи</div>
+                    <div th:if="${task.description}" class="task-description" th:text="${task.description}">Описание</div>
+                    <div class="task-meta">
+                            <span class="task-difficulty" th:classappend="${'difficulty-' + task.difficulty}">
+                                Сложность: <span th:text="${task.difficulty}">EASY</span>
+                            </span>
+                        <span class="task-status" th:classappend="${task.completed} ? 'status-completed' : 'status-active'">
+                                <span th:text="${task.completed} ? '✓ Выполнено' : '⏳ Активно'">Статус</span>
+                            </span>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <a th:href="@{/task/{id}(id=${task.id})}" class="btn btn-edit">
+                        <i class="fas fa-eye"></i> Просмотр
+                    </a>
+                    <a th:href="@{/task/{id}/update(id=${task.id})}" class="btn btn-edit">
+                        <i class="fas fa-edit"></i> Изменить
+                    </a>
+                    <form th:action="@{/task/{id}(id=${task.id})}" method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены?')">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

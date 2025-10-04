@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${task.name} + ' - To-Do List'">Просмотр задачи</title>
+  <link th:href="@{/styles/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <h1><i class="fas fa-eye"></i> Просмотр задачи</h1>
+    <p>Детальная информация о задаче</p>
+  </header>
+
+  <div class="task-details" th:object="${task}">
+    <div class="task-item" th:classappend="${task.completed} ? 'completed' : ''">
+      <div class="task-content">
+        <div class="task-title" th:text="*{name}">Название задачи</div>
+        <div th:if="*{description}" class="task-description" th:text="*{description}">Описание</div>
+        <div class="task-meta">
+                        <span class="task-difficulty" th:classappend="${'difficulty-' + task.difficulty}">
+                            Сложность: <span th:text="*{difficulty}">EASY</span>
+                        </span>
+          <span class="task-status" th:classappend="${task.completed} ? 'status-completed' : 'status-active'">
+                            <span th:text="${task.completed} ? '✓ Выполнено' : '⏳ Активно'">Статус</span>
+                        </span>
+          <span class="task-id">ID: <span th:text="*{id}">123</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions" style="margin-top: 20px; margin-bottom: 20px">
+      <form th:action="@{/task/{id}/update(id=${task.id})}" method="get" style="display: inline;">
+        <button type="submit" class="btn btn-edit">
+          <i class="fas fa-edit"></i> Редактировать
+        </button>
+      </form>
+
+      <form th:action="@{/task/{id}(id=${task.id})}" method="post" style="display: inline;">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите удалить эту задачу?')">
+          <i class="fas fa-trash"></i> Удалить
+        </button>
+      </form>
+
+      <form th:action="@{/task}" method="get" style="display: inline;">
+        <button type="submit" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Назад к списку
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

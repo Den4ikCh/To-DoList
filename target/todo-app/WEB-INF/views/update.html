@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редактирование задачи - To-Do List</title>
+  <link th:href="@{/styles/css/style.css}" rel="stylesheet" />
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <h1><i class="fas fa-edit"></i> Редактирование задачи</h1>
+    <p>Изменение существующей задачи</p>
+  </header>
+
+  <div class="task-form">
+    <form th:action="@{/task/{id}(id=${task.id})}" method="post">
+      <input type="hidden" name="_method" value="PATCH">
+
+      <div class="form-group">
+        <label for="name">Название задачи:</label>
+        <input type="text" id="name" name="name" th:value="${task.name}" required placeholder="Введите название задачи">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description" th:text="${task.description}" placeholder="Введите описание задачи"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="difficulty">Сложность:</label>
+        <select id="difficulty" name="difficulty" th:field="*{task.difficulty}">
+          <option th:each="difficulty : ${T(ru.chuprikov.TaskDifficulty).values()}" th:value="${difficulty.name()}" th:text="${difficulty}" th:selected="${difficulty == task.difficulty}"></option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="completed">Статус:</label>
+        <select id="completed" name="completed">
+          <option value="false" th:selected="${!task.completed}">Не выполнено</option>
+          <option value="true" th:selected="${task.completed}">Выполнено</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> Сохранить изменения
+        </button>
+        <a th:href="@{/task}" class="btn btn-secondary">
+          <i class="fas fa-arrow-left"></i> Назад к списку
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
